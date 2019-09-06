@@ -131,7 +131,7 @@ if __name__ == '__main__':
         74122 votes – "Prices have increased";
         11098 votes – "Prices have not changed";
         85989 votes – "Prices have decreased".
-    Now you need to decide which is true with 95% confidence level.
+    Now you need to decide which one is true with 95% confidence level.
     """
     
     shop_survey = BPCI([74122, 11098, 85989], alpha = 0.05)
