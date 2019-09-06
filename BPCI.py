@@ -24,9 +24,6 @@ class BPCI(object):
             Sample – Sample;
             N – Sum of sample;
             Percentage – Percentage of sample;
-            Z – Absolute value of percent point function of 
-            the standard normal distribution for the probability (alpha/2);
-            delta – Yates correction;
             Cl – Confidence lower limit;
             Cu – Confidence upper limit;
             Conclusion – for the confidence interval for each option, 
@@ -46,9 +43,7 @@ class BPCI(object):
                            N = self.sample.sum(),
                            Percentage = self.percentage,
                            Cl = Cl, 
-                           Cu = Cu,
-                           delta = delta, 
-                           Z = Z)
+                           Cu = Cu)
     
     def clopper_pearson(self):
         """
@@ -145,8 +140,6 @@ if __name__ == '__main__':
              ('Percentage', array([0.43293285, 0.06482136, 0.50224579])),
              ('Cl', array([0.43058293, 0.06365219, 0.4998745 ])),
              ('Cu', array([0.43528276, 0.06599053, 0.50461709])),
-             ('delta', array([0.00234992, 0.00116917, 0.0023713 ])),
-             ('Z', 1.9599639845400545),
              ('Conclusion', array([-1, -1,  0]))])
     """
     
@@ -163,5 +156,5 @@ if __name__ == '__main__':
              ('Conclusion', array([-1, -1,  0]))])
              
     As you can see, only the last option ("Prices have decreased")
-    is more likely.
+    is more likely to be true.
     """
