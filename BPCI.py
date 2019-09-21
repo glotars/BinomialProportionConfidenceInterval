@@ -10,8 +10,10 @@ class BPCI(object):
     """
     def __init__(self, sample, alpha = 0.05):
         self.sample = np.asarray(sample)
-        self.percentage = self.sample / self.sample.sum()
         self.alpha = alpha
+        self.shape = self.sample.shape[0]
+        self.sum = int(self.sample.sum())
+        self.percentage = self.sample / self.sum
     
     def wald(self):
         """
@@ -33,14 +35,14 @@ class BPCI(object):
                 0 – if it's not clear;
         """
         Z = abs(stats.norm.ppf(self.alpha / 2))
-        delta = Z * abs(self.sample * (self.sample.sum() - self.sample) 
-                     / (self.sample.sum()**self.sample.shape))**(1/2) + (0.5 / self.sample.sum())
+        yates_coef = 0.5 / self.sum
+        delta = Z * abs(self.sample * (self.sum - self.sample) / (self.sum**self.shape))**(1/2) + yates_coef
         Cl = self.percentage - delta
         Cu = self.percentage + delta
         return BPCI_Result(Method = 'Wald',
                            alpha = self.alpha,
                            Sample = self.sample,
-                           N = self.sample.sum(),
+                           N = self.sum,
                            Percentage = self.percentage,
                            Cl = Cl, 
                            Cu = Cu)
@@ -72,19 +74,19 @@ class BPCI(object):
                 0 – if it's not clear;
         """
         F_inv_rt_Cl = stats.f.isf(self.alpha/2, 
-                            dfn = 2 * (1 + self.sample.sum() - self.sample), 
+                            dfn = 2 * (1 + self.sum - self.sample), 
                             dfd = 2 * self.sample)
         F_inv_rt_Cu = stats.f.isf(self.alpha/2, 
                             dfn = 2 * (1 + self.sample), 
-                            dfd = 2 * (self.sample.sum() - self.sample))
+                            dfd = 2 * (self.sum - self.sample))
         Cl_vect = np.vectorize(BPCI.__clopper_pearson_Cl)
         Cu_vect = np.vectorize(BPCI.__clopper_pearson_Cu)
-        Cl = Cl_vect(self.sample, self.sample.sum(), F_inv_rt_Cl)
-        Cu = Cu_vect(self.sample, self.sample.sum(), F_inv_rt_Cu)
+        Cl = Cl_vect(self.sample, self.sum, F_inv_rt_Cl)
+        Cu = Cu_vect(self.sample, self.sum, F_inv_rt_Cu)
         return BPCI_Result(Method = 'Clopper-Pearson',
                            alpha = self.alpha,
                            Sample = self.sample,
-                           N = self.sample.sum(),
+                           N = self.sum,
                            Percentage = self.percentage,
                            Cl = Cl, 
                            Cu = Cu)
@@ -156,5 +158,5 @@ if __name__ == '__main__':
              ('Conclusion', array([-1, -1,  0]))])
              
     As you can see, only the last option ("Prices have decreased")
-    is more likely to be true.
+    is more likely to be true in both cases.
     """
