@@ -12,7 +12,7 @@ class BPCI(object):
         self.sample = np.asarray(sample)
         self.alpha = alpha
         self.shape = self.sample.shape[0]
-        self.sum = self.sample.sum().astype(np.int32)
+        self.sum = self.sample.sum().astype(np.int64)
         self.percentage = self.sample / self.sum
     
     def wald(self):
