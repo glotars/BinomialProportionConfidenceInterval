@@ -79,8 +79,8 @@ class BPCI(object):
         F_inv_rt_Cu = stats.f.isf(self.alpha/2, 
                             dfn = 2 * (1 + self.sample), 
                             dfd = 2 * (self.sum - self.sample))
-        Cl_vect = np.vectorize(BPCI.__clopper_pearson_Cl)
-        Cu_vect = np.vectorize(BPCI.__clopper_pearson_Cu)
+        Cl_vect = np.vectorize(self.__clopper_pearson_Cl)
+        Cu_vect = np.vectorize(self.__clopper_pearson_Cu)
         Cl = Cl_vect(self.sample, self.sum, F_inv_rt_Cl)
         Cu = Cu_vect(self.sample, self.sum, F_inv_rt_Cu)
         return BPCI_Result(Method = 'Clopper-Pearson',
@@ -112,7 +112,7 @@ class BPCI_Result(OrderedDict):
         super(BPCI_Result, self).update(Conclusion = self.__conclusion())
     
     def __conclusion(self):
-        return np.vectorize(BPCI_Result.__make_conclusion)(*self.__values)
+        return np.vectorize(self.__make_conclusion)(*self.__values)
     
     @staticmethod
     def __make_conclusion(p, cl, cu):
